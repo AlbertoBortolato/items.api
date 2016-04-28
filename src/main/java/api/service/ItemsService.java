@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 /**
  * Created by matthew on 28.04.16.
  */
-@Named
+@Named  //creare un'istanza singola della classe condivista tra tutte le classe
 public class ItemsService {
 
     @Inject

@@ -11,13 +11,14 @@ import java.util.UUID;
  * Created by matthew on 28.04.16.
  */
 public class Items {
-    Set<Item> items = new HashSet<>();
+    Set<Item> items = new HashSet<>();  //Set è tipo List ma non permette di inserire doppioni (non inserisce in automatico)
     public Set<Item> getItems() {
         return items;
     }
     public void setItems(Set<Item> items) {
         this.items = items;
     }
+
 
     public static class Item{
         String id;
