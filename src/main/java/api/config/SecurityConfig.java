@@ -57,11 +57,11 @@ public class SecurityConfig {
             //@formatter:off
 >>>>>>> aab23e6b405d0f461d6de51b434d48ad8f368ee4
             auth
-                    .inMemoryAuthentication()
-                    .passwordEncoder(bCryptPasswordEncoder())
-                    .withUser(userAdmin).password(userAdminPass).roles(adminRoles.toArray(new String[]{})).and()
-                    .withUser(userDefault).password(bCryptPasswordEncoder().encode(userDefaultPass)).roles(userRoles.toArray(new String[]{}));
-            //@formatter:on
+              .inMemoryAuthentication()
+              .passwordEncoder(bCryptPasswordEncoder())
+              .withUser(userAdmin).password(bCryptPasswordEncoder().encode(userAdminPass)).roles(adminRoles.toArray(new String[]{})).and()
+              .withUser(userDefault).password(bCryptPasswordEncoder().encode(userDefaultPass)).roles(userRoles.toArray(new String[]{}));
+            // @formatter:on
         }
     }
 
