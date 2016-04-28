@@ -16,7 +16,7 @@ import java.util.Map;
 
 /**
  * Created by matthew on 28.04.16.
- */
+ */  /*@-rest-controller E' come il @Controller*/
 @RestController
 @RequestMapping("api")
 public class ItemsController {
@@ -26,7 +26,7 @@ public class ItemsController {
 
     @RequestMapping(value = {"/", ""},
     method = RequestMethod.GET,
-    produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}) /*Produces con gli array*/
     public ResponseEntity<Items> getItems(@RequestParam Map<String, String> queryParamsMap){
 
         return new ResponseEntity<Items>(service.items(), null, HttpStatus.OK);
@@ -34,3 +34,6 @@ public class ItemsController {
 
 
 }
+
+/*Viene usato il ResponseEntity ma con il @RequestParam mentre nell'esercizio degli items abbiamo usato @PathVariable
+* */

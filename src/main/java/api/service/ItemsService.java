@@ -12,7 +12,7 @@ import java.nio.file.Paths;
 
 /**
  * Created by matthew on 28.04.16.
- */
+ */  /*ItemsService è un singleton, cioè Il singleton rappresenta un tipo particolare di classe che garantisce che soltanto un’unica istanza della classe stessa possa essere creata all’interno di un programma.*/
 @Named
 public class ItemsService {
 
