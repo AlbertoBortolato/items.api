@@ -24,17 +24,17 @@ import java.util.List;
 public class SecurityConfig {
     Logger logger = LoggerFactory.getLogger(this.getClass());/*Ci stampa su console come systm.out.println ma stampa anche su file e web, oltre che su console. Inltre l'output può essere configurato e eperemtte di lavorare sui livelli, soprattuttto se voglio tanti detttagli. I lvelli sono info, error, trace, e debug e quello di default è info. Info non da peso all'operazione, come error, con il vantaggio di nono perder cicli se facciamo cose importnti. Con logger posso filtrare anche per package. In tutte le classi di servizio è OBBLIGATORIO mettere questa riga*/
 
-    @Value("${api.items.use_authentication:true}")/*@Value indica un valore di default, ma è meno rilevante di quanto sta nell'application.properties. Il value api.items.use_authentication=true di aplplication.properties è rilevante.*/
+    @Value("${api.items.use_authentication:true}") /*@Value indica un valore di default, ma è meno rilevante di quanto sta nell'application.properties. Il value api.items.use_authentication=true di aplplication.properties è rilevante.*/
     boolean useAuthentication;
     @Value("${api.items.user.admin.pass:admin-1}")
     String userAdminPass;
     @Value("${api.items.user.default.pass:default-1}")
     String userDefaultPass;
-    @Value("${api.items.user.admin:admin}")
+    @Value("${api.items.user.admin:admin}")/*amministratore*/
     String userAdmin;
-    @Value("${api.items.user.default:default}")
+    @Value("${api.items.user.default:default}")/*utente visitatore*/
     String userDefault;
-    @Value("${api.items.user.admin.roles:ADMIN}")
+    @Value("${api.items.user.admin.roles:ADMIN}")/*Con @Value posso instanziare una lista di valroi; qui preciso il ruolo dell'utente admin che è ADMIN*/
     List<String> userAdminRoles;
     @Value("${api.items.user.default.roles:USER}")
     List<String> userDefaultRoles;
@@ -50,14 +50,14 @@ public class SecurityConfig {
         if (useAuthentication) {
             List<String> adminRoles = userAdminRoles;
             List<String> userRoles = userDefaultRoles;
-            // @formatter:off
-            auth
+            // @formatter:off  Questo commento dice alla ide di non formattare il testo quando schiacci ctrl+alt+l. Impostiamo i bin di binEncoder
+            auth /*Questo modi di programmare si chiama fluent api, soprattutto per configurazione di cose si usa il fluent api che restituisce un oggetto apparentabile a se stesso. Lodsh usa la logica di chain ed è concatenabile.*/
                     .inMemoryAuthentication()
-                    .passwordEncoder(bCryptPasswordEncoder())
-                    .withUser(userAdmin).password(bCryptPasswordEncoder().encode(userAdminPass)).roles(adminRoles.toArray(new String[]{})).and()
+                    .passwordEncoder(bCryptPasswordEncoder())/*Salvo la password dell'utente già criptata*/
+                    .withUser(userAdmin).password(bCryptPasswordEncoder().encode(userAdminPass)).roles(adminRoles.toArray(new String[]{})).and()/*Indichiamo la sua password blindata.  Da questo pto in poi il testo ha una chiave criptata. Nei bitcryptencoder le password non sono mai in vista, vengono memorizzate con caratteri criptatik*/
                     .withUser(userDefault).password(bCryptPasswordEncoder().encode(userDefaultPass)).roles(userRoles.toArray(new String[]{}));
-            // @formatter:on
-        }
+            // @formatter:on.
+        }//// TODO: 28/04/2016
     }
 
     @Configuration
@@ -67,7 +67,7 @@ public class SecurityConfig {
         boolean useAuthentication;
 
         @Override
-        protected void configure(HttpSecurity http) throws Exception {
+        protected void configure(HttpSecurity http) throws Exception {/*Qui configuriamo gli endpoint*/
             if (useAuthentication) {
                 // @formatter:off
                 http
