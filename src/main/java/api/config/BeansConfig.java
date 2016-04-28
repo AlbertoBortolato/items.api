@@ -15,10 +15,10 @@ import java.nio.file.Paths;
 public class BeansConfig {
 
     @Value("${api.items.file}")
-    String file;
+    String file;                  //questo all'avvio dovrebbe prendere valore scritto nella riga 4 in application properties
 
-    @Bean
-    public Items items() {
+    @Bean  // una volta che lo carico viene messo dentro un raccoglitore di oggetti Spring, questi sono riutilizzabili. sono indicizzati per tipo e per nome.
+    public Items items() {    // avremo un bean di tipo Items con il nome items
         Path filePath = Paths.get(file);
 
         //read filePath

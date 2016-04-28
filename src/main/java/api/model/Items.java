@@ -11,7 +11,7 @@ import java.util.UUID;
  * Created by matthew on 28.04.16.
  */
 public class Items {
-    Set<Item> items = new HashSet<>();
+    Set<Item> items = new HashSet<>(); //insieme senza doppioni .
     public Set<Item> getItems() {
         return items;
     }

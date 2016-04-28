@@ -13,14 +13,14 @@ import java.nio.file.Paths;
 /**
  * Created by matthew on 28.04.16.
  */
-@Named
+@Named // per questo devi creare un istanza di questa classe e lo usiamo come name.
 public class ItemsService {
 
     @Inject
     ObjectMapper mapper;
 
     @Inject
-    Items items;
+    Items items;  // è quello creato nel beansConfig
 
     @Value("${api.items.file}")
     String file;

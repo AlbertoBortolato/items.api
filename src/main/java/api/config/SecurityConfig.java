@@ -22,8 +22,8 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    Logger logger = LoggerFactory.getLogger(this.getClass());
-
+    Logger logger = LoggerFactory.getLogger(this.getClass()); // stampa su console ma puo essere configurato anche per stampare su file e su email. Output può essere configurato in qualche modo
+                                                              // si lavora su livelli : error stampa solo errori, info stampa errori e info, debug stampa debug error e info, trace stampa tutto.
     @Value("${api.items.use_authentication:true}")
     boolean useAuthentication;
     @Value("${api.items.user.admin:admin-1}")
