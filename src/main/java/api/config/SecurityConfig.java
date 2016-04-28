@@ -50,7 +50,7 @@ public class SecurityConfig {
         if (useAuthentication) {
             List<String> adminRoles = userAdminRoles;
             List<String> userRoles = userDefaultRoles;
-            // @formatter:off
+            //@formatter:off
             auth
               .inMemoryAuthentication()
               .passwordEncoder(bCryptPasswordEncoder())
@@ -71,34 +71,36 @@ public class SecurityConfig {
             if (useAuthentication) {
                 // @formatter:off
                 http
-                  .csrf()
-                  .disable()
-                  .authorizeRequests()
-                  .antMatchers(HttpMethod.GET, "/api")
-                  .hasAnyRole("ADMIN", "USER")
-                  .antMatchers(HttpMethod.PUT, "/api")
-                  .hasAnyRole("ADMIN", "USER")
-                  .antMatchers(HttpMethod.POST, "/api")
-                  .hasAnyRole("ADMIN", "USER")
-                  .antMatchers(HttpMethod.DELETE, "/api")
-                  .hasAnyRole("ADMIN")
-                  .antMatchers("/**")
-                  .hasRole("ADMIN")
-                  .and()
-                  .sessionManagement()
-                  .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-                  .and()
-                  .formLogin()
-                  .and()
-                  .httpBasic()
-                  .and()
-                  .logout()
-                  .and()
-                  .rememberMe()
+                        .csrf()
+                            .disable()
+                        .authorizeRequests()
+                            .antMatchers(HttpMethod.GET, "/api")
+                                .hasAnyRole("ADMIN", "USER")
+                            .antMatchers(HttpMethod.PUT, "/api")
+                                .hasAnyRole("ADMIN", "USER")
+                            .antMatchers(HttpMethod.POST, "/api")
+                                .hasAnyRole("ADMIN", "USER")
+                            .antMatchers(HttpMethod.DELETE, "/api")
+                                .hasAnyRole("ADMIN")
+                            .antMatchers("/**")
+                                .hasRole("ADMIN")
+                        .and()
+                            .sessionManagement()
+                                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                        .and()
+                            .formLogin()
+                        .and()
+                            .httpBasic()
+                        .and()
+                            .logout()
+                        .and()
+                            .rememberMe()
                 ;
                 // @formatter:on
             } else {
-                http.csrf().disable();
+                http
+                        .csrf()
+                            .disable();
             }
         }
     }
