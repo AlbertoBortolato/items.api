@@ -50,6 +50,7 @@ public class SecurityConfig {
         if (useAuthentication) {
             List<String> adminRoles = userAdminRoles;
             List<String> userRoles = userDefaultRoles;
+
             // @formatter:off
             auth
                     .inMemoryAuthentication()
