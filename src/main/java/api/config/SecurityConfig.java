@@ -39,6 +39,7 @@ public class SecurityConfig {
     @Value("${api.items.user.default.roles:USER}")
     List<String> userDefaultRoles;
 
+
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
@@ -51,7 +52,7 @@ public class SecurityConfig {
             List<String> adminRoles = userAdminRoles;
             List<String> userRoles = userDefaultRoles;
             // @formatter:off
-            auth
+            auth//// TODO: 28/04/2016 view->tool windows->TODO
                     .inMemoryAuthentication()
                     .passwordEncoder(bCryptPasswordEncoder())
                     .withUser(userAdmin).password(bCryptPasswordEncoder().encode(userAdminPass)).roles(adminRoles.toArray(new String[]{})).and()
