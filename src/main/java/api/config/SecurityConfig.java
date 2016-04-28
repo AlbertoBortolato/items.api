@@ -26,15 +26,15 @@ public class SecurityConfig {
 
     @Value("${api.items.use_authentication:true}")
     boolean useAuthentication;
-    @Value("${api.items.user.admin:admin-1}")
+    @Value("${api.items.user.admin.pass:admin-1}")
     String userAdminPass;
-    @Value("${api.items.user.default:default-1}")
+    @Value("${api.items.user.default.pass:default-1}")
     String userDefaultPass;
     @Value("${api.items.user.admin:admin}")
     String userAdmin;
     @Value("${api.items.user.default:default}")
     String userDefault;
-    @Value("${api.items.user.admin.rolse:ADMIN}")
+    @Value("${api.items.user.admin.roles:ADMIN}")
     List<String> userAdminRoles;
     @Value("${api.items.user.default.roles:USER}")
     List<String> userDefaultRoles;
