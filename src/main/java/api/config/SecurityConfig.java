@@ -50,14 +50,18 @@ public class SecurityConfig {
         if (useAuthentication) {
             List<String> adminRoles = userAdminRoles;
             List<String> userRoles = userDefaultRoles;
+<<<<<<< HEAD
 
             // @formatter:off
+=======
+            //@formatter:off
+>>>>>>> aab23e6b405d0f461d6de51b434d48ad8f368ee4
             auth
                     .inMemoryAuthentication()
                     .passwordEncoder(bCryptPasswordEncoder())
-                    .withUser(userAdmin).password(bCryptPasswordEncoder().encode(userAdminPass)).roles(adminRoles.toArray(new String[]{})).and()
+                    .withUser(userAdmin).password(userAdminPass).roles(adminRoles.toArray(new String[]{})).and()
                     .withUser(userDefault).password(bCryptPasswordEncoder().encode(userDefaultPass)).roles(userRoles.toArray(new String[]{}));
-            // @formatter:on
+            //@formatter:on
         }
     }
 
@@ -74,20 +78,20 @@ public class SecurityConfig {
                 http
                         .csrf()
                             .disable()
-                            .authorizeRequests()
-                        .antMatchers(HttpMethod.GET, "/api")
-                            .hasAnyRole("ADMIN", "USER")
-                        .antMatchers(HttpMethod.PUT, "/api")
-                            .hasAnyRole("ADMIN", "USER")
-                        .antMatchers(HttpMethod.POST, "/api")
-                            .hasAnyRole("ADMIN", "USER")
-                        .antMatchers(HttpMethod.DELETE, "/api")
-                            .hasAnyRole("ADMIN")
-                        .antMatchers("/**")
-                            .hasRole("ADMIN")
+                        .authorizeRequests()
+                            .antMatchers(HttpMethod.GET, "/api")
+                                .hasAnyRole("ADMIN", "USER")
+                            .antMatchers(HttpMethod.PUT, "/api")
+                                .hasAnyRole("ADMIN", "USER")
+                            .antMatchers(HttpMethod.POST, "/api")
+                                .hasAnyRole("ADMIN", "USER")
+                            .antMatchers(HttpMethod.DELETE, "/api")
+                                .hasAnyRole("ADMIN")
+                            .antMatchers("/**")
+                                .hasRole("ADMIN")
                         .and()
                             .sessionManagement()
-                            .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                         .and()
                             .formLogin()
                         .and()
@@ -99,7 +103,9 @@ public class SecurityConfig {
                 ;
                 // @formatter:on
             } else {
-                http.csrf().disable();
+                http
+                        .csrf()
+                            .disable();
             }
         }
     }
