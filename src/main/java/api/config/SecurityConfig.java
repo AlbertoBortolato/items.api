@@ -26,6 +26,7 @@ public class SecurityConfig {
 
     @Value("${api.items.use_authentication:true}")  //settiamo un valore di default ==> valore = true
     boolean useAuthentication;
+
     @Value("${api.items.user.admin.pass:admin-1}")
     String userAdminPass;
     @Value("${api.items.user.default.pass:default-1}")
@@ -51,9 +52,9 @@ public class SecurityConfig {
             List<String> adminRoles = userAdminRoles;
             List<String> userRoles = userDefaultRoles;
             // @formatter:off
-            auth
+            auth        //con @formatter ignora il comando ctrl + alt + l (ordina codice)
                     .inMemoryAuthentication()
-                    .passwordEncoder(bCryptPasswordEncoder())
+                    .passwordEncoder(bCryptPasswordEncoder())  //password encoded
                     .withUser(userAdmin).password(bCryptPasswordEncoder().encode(userAdminPass)).roles(adminRoles.toArray(new String[]{})).and()
                     .withUser(userDefault).password(bCryptPasswordEncoder().encode(userDefaultPass)).roles(userRoles.toArray(new String[]{}));
             // @formatter:on
