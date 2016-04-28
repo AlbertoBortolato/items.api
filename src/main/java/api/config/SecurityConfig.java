@@ -53,11 +53,11 @@ public class SecurityConfig {
             List<String> userRoles = userDefaultRoles;
             // @formatter:off
             auth//// TODO: 28/04/2016 view->tool windows->TODO
-                    .inMemoryAuthentication()
-                    .passwordEncoder(bCryptPasswordEncoder())
-                    .withUser(userAdmin).password(userAdminPass).roles(adminRoles.toArray(new String[]{})).and()
-                    .withUser(userDefault).password(bCryptPasswordEncoder().encode(userDefaultPass)).roles(userRoles.toArray(new String[]{}));
-            //@formatter:on
+              .inMemoryAuthentication()
+              .passwordEncoder(bCryptPasswordEncoder())
+              .withUser(userAdmin).password(bCryptPasswordEncoder().encode(userAdminPass)).roles(adminRoles.toArray(new String[]{})).and()
+              .withUser(userDefault).password(bCryptPasswordEncoder().encode(userDefaultPass)).roles(userRoles.toArray(new String[]{}));
+            // @formatter:on
         }
     }
 
