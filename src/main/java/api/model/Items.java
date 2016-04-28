@@ -11,7 +11,7 @@ import java.util.UUID;
  * Created by matthew on 28.04.16.
  */
 public class Items {
-    Set<Item> items = new HashSet<>();
+    Set<Item> items = new HashSet<>();                  //Il set non contiene doppioni a differenza della lista
     public Set<Item> getItems() {
         return items;
     }
@@ -29,7 +29,7 @@ public class Items {
 
         public Item(){
             id = UUID.randomUUID().toString();
-        }
+        }       //UUID ==> ID univoco (pesano un pò di più)
 
         public String getId() {
             return id;

@@ -24,7 +24,7 @@ public class ItemsController {
     @Inject
     ItemsService service;
 
-    @RequestMapping(value = {"/", ""},
+    @RequestMapping(value = {"/", ""},          //mappiamo lo stesso metodo a più percorsi
     method = RequestMethod.GET,
     produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<Items> getItems(@RequestParam Map<String, String> queryParamsMap){

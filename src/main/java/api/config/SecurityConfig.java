@@ -22,9 +22,9 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    Logger logger = LoggerFactory.getLogger(this.getClass());
+    Logger logger = LoggerFactory.getLogger(this.getClass());   //Logger più evoluto di println (stampa sia su console, file, mail...)
 
-    @Value("${api.items.use_authentication:true}")
+    @Value("${api.items.use_authentication:true}")  //settiamo un valore di default ==> valore = true
     boolean useAuthentication;
     @Value("${api.items.user.admin:admin-1}")
     String userAdminPass;

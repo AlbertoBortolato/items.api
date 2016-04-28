@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 /**
  * Created by matthew on 28.04.16.
  */
-@Named
+@Named                              //Diciamo al contenitore di creare un istanza come classe e usarlo come bean
 public class ItemsService {
 
     @Inject

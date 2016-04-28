@@ -14,11 +14,11 @@ import java.nio.file.Paths;
 @Configuration
 public class BeansConfig {
 
-    @Value("${api.items.file}")
+    @Value("${api.items.file}")             //$ ==> Spring expression language
     String file;
 
-    @Bean
-    public Items items() {
+    @Bean                                   //Beans : classi speciali per la configurazione dell app (Condivisi trasversalmente)
+    public Items items() {                  //Bean di tipo Items di nome items
         Path filePath = Paths.get(file);
 
         //read filePath
