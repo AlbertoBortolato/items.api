@@ -4,6 +4,7 @@ import api.model.Items;
 import api.service.ItemsService;
 import javafx.scene.input.InputMethodTextRun;
 import org.omg.CORBA.Request;
+import org.springframework.beans.propertyeditors.StringArrayPropertyEditor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -11,7 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by matthew on 28.04.16.
@@ -23,14 +26,14 @@ public class ItemsController {
     @Inject
     ItemsService service;
 
-    @RequestMapping(value = {"/", ""},
+   /* @RequestMapping(value = {"/", ""},
       method = RequestMethod.GET,
       produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<Items> getItems(@RequestParam Map<String, String> queryParamsMap) {
 
         return new ResponseEntity<Items>(service.items(), null, HttpStatus.OK);
     }
-
+*/
 
     //curl -X POST -H "Content-Type: application/json" -d @test.txt http://admin:admin-1@localhost:8080/api
     @RequestMapping(value = {"/", ""},
@@ -92,6 +95,39 @@ public class ItemsController {
         }
 
         return new ResponseEntity<Object>(service.items(), null, HttpStatus.NOT_FOUND);
+    }
+
+    //curl -X GET -H "Content-Type: application/json" http://admin:admin-1@localhost:8080/api/?query={id}
+    @RequestMapping(value={"/",""},
+    method = RequestMethod.GET,
+    produces = {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<?> ricerca(@RequestParam(value="query",required = false)
+                                      String id){
+        Items.Item item = new Items.Item();
+        item.setId(id);
+        Items.Item result = null;
+        if (id!=null) {
+            if (service.items().getItems().contains(item)) {
+                List<Items.Item> tmpList = new LinkedList<>(service.items().getItems());
+                result = tmpList.get(tmpList.indexOf(item));
+                return new ResponseEntity<Object>(result, null, HttpStatus.OK);
+            }
+        }
+        /*Stream<Items.Item> resultPart = service.items().getItems().stream()
+          .filter(it -> it.getId() != null)
+          .filter(it -> it.getId().toLowerCase().equals(query.toLowerCase()));
+
+        Set<Items.Item> resultSet = resultPart
+          .collect(Collectors.toSet());
+
+        Optional<Items.Item> resultOpt = resultPart
+          .findFirst();
+
+        if(!resultOpt.equals(Optional.empty())){
+            Items.Item result = resultOpt.get();
+        }*/
+         // .collect(Collectors.toSet());
+        return new ResponseEntity<Object>(service.items(),null, HttpStatus.NOT_FOUND);
     }
 
 }
