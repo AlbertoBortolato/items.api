@@ -97,7 +97,8 @@ public class ItemsController {
         return new ResponseEntity<Object>(service.items(), null, HttpStatus.NOT_FOUND);
     }
 
-    //curl -X GET -H "Content-Type: application/json" http://admin:admin-1@localhost:8080/api/?query={id}
+    //RICERCA -> curl -X GET -H "Content-Type: application/json" http://admin:admin-1@localhost:8080/api/?query={id}
+    //SHOW LIST -> curl -X GET -H "Content-Type: application/json" http://admin:admin-1@localhost:8080/api
     @RequestMapping(value={"/",""},
     method = RequestMethod.GET,
     produces = {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
