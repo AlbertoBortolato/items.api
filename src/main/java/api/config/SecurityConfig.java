@@ -38,7 +38,7 @@ public class SecurityConfig {
     List<String> userAdminRoles;
     @Value("${api.items.user.default.roles:USER}")
     List<String> userDefaultRoles;
-    
+
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
