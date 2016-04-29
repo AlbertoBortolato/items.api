@@ -2,13 +2,14 @@ package api.controller;
 
 import api.model.Items;
 import api.service.ItemsService;
+import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.Map;
 
 /**
  * Created by matthew on 28.04.16.
@@ -16,7 +17,7 @@ import java.util.*;
 @RestController
 @RequestMapping("api")
 public class ItemsController {
-
+    Logger log = org.slf4j.LoggerFactory.getLogger(this.getClass());
     @Inject
     ItemsService service;
 
@@ -34,28 +35,31 @@ public class ItemsController {
             return new ResponseEntity<Items>(service.items(), null, HttpStatus.OK);
         }
     }
-    @RequestMapping(value = {"/api"},
+
+    @RequestMapping(value = "/{id}",
       method = RequestMethod.DELETE,
       produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<Items> removeItems(@RequestBody String id) {
+    public ResponseEntity<Items> removeItems(@PathVariable("id") String id) {
 
         boolean b = service.delete(id);
-        if(b) {
+        if (b) {
             return new ResponseEntity<Items>(null, null, HttpStatus.OK);
-        }else {
+
+        } else {
             return new ResponseEntity<Items>(null, null, HttpStatus.BAD_REQUEST);
         }
     }
 
-    @RequestMapping(value = {"/"},
+    @RequestMapping(value = "/{id}",
       method = RequestMethod.PUT,
       produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<Items> updateItems(@RequestBody String id, Items.Item new_item) {
+    public ResponseEntity<Items> updateItems(@PathVariable("id") String id,@RequestBody Items.Item new_item) {
 
         boolean b = service.update(new_item, id);
-        if(b) {
+        if (b) {
+            log.info("", service.items().getItems());
             return new ResponseEntity<Items>(null, null, HttpStatus.OK);
-        }else{
+        } else {
             return new ResponseEntity<Items>(null, null, HttpStatus.NOT_MODIFIED);
         }
     }
