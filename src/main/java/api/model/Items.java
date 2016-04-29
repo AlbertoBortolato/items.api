@@ -98,9 +98,9 @@ public class Items {
         @Override
         public String toString() {
             return "Item{" +
-                    "name='" + name + '\'' +
-                    ", id='" + id + '\'' +
-                    '}';
-        }
+          "name='" + name + '\'' +
+          ", id='" + id + '\'' +
+          '}';
+    }
     }
 }
