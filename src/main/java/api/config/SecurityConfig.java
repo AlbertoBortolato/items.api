@@ -26,14 +26,22 @@ public class SecurityConfig {
 
     @Value("${api.items.use_authentication:true}") /*@Value indica un valore di default, ma è meno rilevante di quanto sta nell'application.properties. Il value api.items.use_authentication=true di aplplication.properties è rilevante.*/
     boolean useAuthentication;
+//    @Value("${api.items.user.admin.pass:admin-1}")
+//    String userAdminPass;
     @Value("${api.items.user.admin.pass:admin-1}")
     String userAdminPass;
+
     @Value("${api.items.user.default.pass:default-1}")
     String userDefaultPass;
+//    @Value("${api.items.user.admin:admin}")/*amministratore*/
+//    String userAdmin;
     @Value("${api.items.user.admin:admin}")/*amministratore*/
     String userAdmin;
-    @Value("${api.items.user.default:default}")/*utente visitatore*/
+//    @Value("${api.items.user.default:default}")/*utente visitatore*/
+//    String userDefault;
+    @Value("${api.items.user.default:visitor}")/*utente visitatore*/
     String userDefault;
+
     @Value("${api.items.user.admin.roles:ADMIN}")/*Con @Value posso instanziare una lista di valroi; qui preciso il ruolo dell'utente admin che è ADMIN*/
     List<String> userAdminRoles;
     @Value("${api.items.user.default.roles:USER}")
@@ -50,8 +58,8 @@ public class SecurityConfig {
         if (useAuthentication) {
             List<String> adminRoles = userAdminRoles;
             List<String> userRoles = userDefaultRoles;
-            // @formatter:off  Questo commento dice alla ide di non formattare il testo quando schiacci ctrl+alt+l. Impostiamo i bin di binEncoder
-            auth /*Questo modi di programmare si chiama fluent api, soprattutto per configurazione di cose si usa il fluent api che restituisce un oggetto apparentabile a se stesso. Lodsh usa la logica di chain ed è concatenabile.*/
+                     // @formatter:off  Questo commento dice alla ide di non formattare il testo quando schiacci ctrl+alt+l. Impostiamo i bin di binEncoder
+            auth     /*Questo modi di programmare si chiama fluent api, soprattutto per configurazione di cose si usa il fluent api che restituisce un oggetto apparentabile a se stesso. Lodsh usa la logica di chain ed è concatenabile.*/
                     .inMemoryAuthentication()
                     .passwordEncoder(bCryptPasswordEncoder())/*Salvo la password dell'utente già criptata*/
                     .withUser(userAdmin).password(bCryptPasswordEncoder().encode(userAdminPass)).roles(adminRoles.toArray(new String[]{})).and()/*Indichiamo la sua password blindata.  Da questo pto in poi il testo ha una chiave criptata. Nei bitcryptencoder le password non sono mai in vista, vengono memorizzate con caratteri criptatik*/
@@ -73,20 +81,20 @@ public class SecurityConfig {
                 http
                         .csrf()
                             .disable()
-                            .authorizeRequests()
-                        .antMatchers(HttpMethod.GET, "/api")
-                            .hasAnyRole("ADMIN", "USER")
-                        .antMatchers(HttpMethod.PUT, "/api")
-                            .hasAnyRole("ADMIN", "USER")
-                        .antMatchers(HttpMethod.POST, "/api")
-                            .hasAnyRole("ADMIN", "USER")
-                        .antMatchers(HttpMethod.DELETE, "/api")
-                            .hasAnyRole("ADMIN")
-                        .antMatchers("/**")
-                            .hasRole("ADMIN")
+                        .authorizeRequests()
+                            .antMatchers(HttpMethod.GET, "/api") //imposto i ruoli
+                                .hasAnyRole("ADMIN", "USER")
+                            .antMatchers(HttpMethod.PUT, "/api")
+                                .hasAnyRole("ADMIN", "USER")
+                            .antMatchers(HttpMethod.POST, "/api")
+                                .hasAnyRole("ADMIN", "USER")
+                            .antMatchers(HttpMethod.DELETE, "/api")
+                                .hasAnyRole("ADMIN")
+                            .antMatchers("/**")
+                                .hasRole("ADMIN")
                         .and()
                             .sessionManagement()
-                            .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                         .and()
                             .formLogin()
                         .and()
@@ -98,7 +106,9 @@ public class SecurityConfig {
                 ;
                 // @formatter:on
             } else {
-                http.csrf().disable();
+                http
+                        .csrf()
+                            .disable();
             }
         }
     }
