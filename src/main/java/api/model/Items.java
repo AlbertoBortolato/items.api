@@ -1,7 +1,5 @@
 package api.model;
 
-import org.joda.time.DateTime;
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -83,12 +81,13 @@ public class Items {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+           // if (o == null || getClass() != o.getClass()) return false;
 
-            Item item = (Item) o;
+          //  Item item = (Item) o;
 
-            return id.equals(item.id);
-
+            Integer localId = this.hashCode();
+            Integer otherId = o.hashCode();
+            return localId.equals(otherId);
         }
 
         @Override
@@ -102,6 +101,7 @@ public class Items {
                     "name='" + name + '\'' +
                     ", id='" + id + '\'' +
                     '}';
+
         }
     }
 }

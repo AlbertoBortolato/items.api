@@ -52,11 +52,11 @@ public class SecurityConfig {
             List<String> userRoles = userDefaultRoles;
             //@formatter:off
             auth
-              .inMemoryAuthentication()
-              .passwordEncoder(bCryptPasswordEncoder())
-              .withUser(userAdmin).password(bCryptPasswordEncoder().encode(userAdminPass)).roles(adminRoles.toArray(new String[]{})).and()
-              .withUser(userDefault).password(bCryptPasswordEncoder().encode(userDefaultPass)).roles(userRoles.toArray(new String[]{}));
-            // @formatter:on
+                    .inMemoryAuthentication()
+                    .passwordEncoder(bCryptPasswordEncoder())
+                    .withUser(userAdmin).password(bCryptPasswordEncoder().encode(userAdminPass)).roles(adminRoles.toArray(new String[]{})).and()
+                    .withUser(userDefault).password(bCryptPasswordEncoder().encode(userDefaultPass)).roles(userRoles.toArray(new String[]{}));
+            //@formatter:on
         }
     }
 
@@ -99,8 +99,8 @@ public class SecurityConfig {
                 // @formatter:on
             } else {
                 http
-                        .csrf()
-                            .disable();
+                  .csrf()
+                  .disable();
             }
         }
     }
