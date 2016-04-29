@@ -61,7 +61,6 @@ public class ItemsService {
         return response;
     }
 
-
     public boolean setItem (Items.Item item1,String id){
         java.util.Optional<Items.Item> found = this.items().getItems().stream()
           .filter(item -> item.getId().equals(id))
