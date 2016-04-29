@@ -5,7 +5,6 @@ import api.service.ItemsService;
 import org.apache.tomcat.util.http.fileupload.MultipartStream;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -75,7 +74,6 @@ public class ItemsController {
             service.items().getItems().add(item);
         }
 
-
         return new ResponseEntity<Items>(service.items(), null, HttpStatus.OK);   //service.items() restituisce la bean di items.
     }
 
@@ -100,7 +98,6 @@ public class ItemsController {
     }
 
            //service.items() restituisce la bean di items.
-
 
 
 }

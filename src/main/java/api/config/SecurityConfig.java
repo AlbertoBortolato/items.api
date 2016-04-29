@@ -28,7 +28,7 @@ public class SecurityConfig {
     boolean useAuthentication;
     @Value("${api.items.user.admin.pass:admin-1}")
     String userAdminPass;
-    @Value("${api.items.user.default:default-1}")
+    @Value("${api.items.user.default.pass:default-1}")
     String userDefaultPass;
     @Value("${api.items.user.admin:admin}") //i due utenti admin e dafaut
     String userAdmin;
@@ -52,10 +52,10 @@ public class SecurityConfig {
             List<String> userRoles = userDefaultRoles;
             // @formatter:off // TODO: 28/04/2016
             auth
-                    .inMemoryAuthentication()
-                    .passwordEncoder(bCryptPasswordEncoder())
-                    .withUser(userAdmin).password(bCryptPasswordEncoder().encode(userAdminPass)).roles(adminRoles.toArray(new String[]{})).and()
-                    .withUser(userDefault).password(bCryptPasswordEncoder().encode(userDefaultPass)).roles(userRoles.toArray(new String[]{}));
+              .inMemoryAuthentication()
+              .passwordEncoder(bCryptPasswordEncoder())
+              .withUser(userAdmin).password(bCryptPasswordEncoder().encode(userAdminPass)).roles(adminRoles.toArray(new String[]{})).and()
+              .withUser(userDefault).password(bCryptPasswordEncoder().encode(userDefaultPass)).roles(userRoles.toArray(new String[]{}));
             // @formatter:on
         }
     }
@@ -98,7 +98,9 @@ public class SecurityConfig {
                 ;
                 // @formatter:on
             } else {
-                http.csrf().disable();
+                http
+                        .csrf()
+                            .disable();
             }
         }
     }
