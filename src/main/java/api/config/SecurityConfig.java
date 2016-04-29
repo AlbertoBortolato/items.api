@@ -26,17 +26,17 @@ public class SecurityConfig {
                                                               // si lavora su livelli : error stampa solo errori, info stampa errori e info, debug stampa debug error e info, trace stampa tutto.
     @Value("${api.items.use_authentication:true}")
     boolean useAuthentication;
-    @Value("${api.items.user.admin:admin-1}")
+    @Value("${api.items.user.admin.pass:admin-1}")
     String userAdminPass;
     @Value("${api.items.user.default:default-1}")
     String userDefaultPass;
-    @Value("${api.items.user.admin:admin}")
+    @Value("${api.items.user.admin:admin}") //i due utenti admin e dafaut
     String userAdmin;
     @Value("${api.items.user.default:default}")
     String userDefault;
-    @Value("${api.items.user.admin.rolse:ADMIN}")
+    @Value("${api.items.user.admin.rolse:ADMIN}") //ruoli a cui appartiene utente admin . utente admin ruolo ADMIN
     List<String> userAdminRoles;
-    @Value("${api.items.user.default.roles:USER}")
+    @Value("${api.items.user.default.roles:USER}") //ruoli a cui appartiene utente default . utente admin ruolo USER
     List<String> userDefaultRoles;
 
     @Bean
@@ -50,7 +50,7 @@ public class SecurityConfig {
         if (useAuthentication) {
             List<String> adminRoles = userAdminRoles;
             List<String> userRoles = userDefaultRoles;
-            // @formatter:off
+            // @formatter:off // TODO: 28/04/2016
             auth
                     .inMemoryAuthentication()
                     .passwordEncoder(bCryptPasswordEncoder())
@@ -68,13 +68,13 @@ public class SecurityConfig {
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
-            if (useAuthentication) {
+            if (useAuthentication) { // configurazione sicurezza sugli end point .
                 // @formatter:off
                 http
-                        .csrf()
+                        .csrf() // server decide se i suoi metodi possono essere chiamati da origini diversi
                             .disable()
-                            .authorizeRequests()
-                        .antMatchers(HttpMethod.GET, "/api")
+                            .authorizeRequests() // con autenticazione attive voglio che tutte le chiamate passano attraverso filtri di autorizzazione
+                        .antMatchers(HttpMethod.GET, "/api") // con antMatchers impostiamo i ruoli
                             .hasAnyRole("ADMIN", "USER")
                         .antMatchers(HttpMethod.PUT, "/api")
                             .hasAnyRole("ADMIN", "USER")
@@ -82,10 +82,10 @@ public class SecurityConfig {
                             .hasAnyRole("ADMIN", "USER")
                         .antMatchers(HttpMethod.DELETE, "/api")
                             .hasAnyRole("ADMIN")
-                        .antMatchers("/**")
+                        .antMatchers("/**") // non è indicato il metodo , solo amministratore può vedere questi metodi(hasRole (admin))
                             .hasRole("ADMIN")
                         .and()
-                            .sessionManagement()
+                            .sessionManagement() // una volta che ti loggi viene impostato un cookie sulla chiamata. tiene la sessione
                             .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                         .and()
                             .formLogin()
@@ -94,7 +94,7 @@ public class SecurityConfig {
                         .and()
                             .logout()
                         .and()
-                            .rememberMe()
+                            .rememberMe() // ti permette spuntando la casella di tenere le credenziali nel browser
                 ;
                 // @formatter:on
             } else {
