@@ -62,16 +62,20 @@ public class ItemsService {
     }
 
 
-    public  void setItem (Items.Item item1,String id){
+    public boolean setItem (Items.Item item1,String id){
         java.util.Optional<Items.Item> found = this.items().getItems().stream()
           .filter(item -> item.getId().equals(id))
           .findFirst();
         if(!found.equals(java.util.Optional.empty())){
-            this.items.getItems().remove(found);
+            this.items.getItems().remove(found.get());
             item1.setCreationDate(found.get().getCreationDate());
             item1.setId(found.get().getId());
             item1.setModifiedDate(new Date());
             this.items.getItems().add(item1);
+            return true;
+        }
+        else{
+            return false;
         }
     }
 

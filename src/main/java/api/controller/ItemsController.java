@@ -49,7 +49,19 @@ public class ItemsController {
     public ResponseEntity<Items> delete(@PathVariable("id") String id){
         Items deletato= service.getId(id);
         if(service.deleteItem(id)){
-            return  new ResponseEntity<Items>(deletato, null, HttpStatus.ACCEPTED);
+            return  new ResponseEntity<Items>(deletato, null, HttpStatus.OK);
+        }
+        else{
+            return  new ResponseEntity<Items>(null,null,HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT,
+      produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<Items> update(@PathVariable("id") String id,@RequestBody Items.Item item1){
+        Items modificato= service.getId(id);
+        if(service.setItem(item1, id)){
+            return  new ResponseEntity<Items>(modificato, null, HttpStatus.OK);
         }
         else{
             return  new ResponseEntity<Items>(null,null,HttpStatus.BAD_REQUEST);
