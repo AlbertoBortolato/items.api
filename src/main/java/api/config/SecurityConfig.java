@@ -50,12 +50,8 @@ public class SecurityConfig {
         if (useAuthentication) {
             List<String> adminRoles = userAdminRoles;
             List<String> userRoles = userDefaultRoles;
-<<<<<<< HEAD
 
-            // @formatter:off
-=======
             //@formatter:off
->>>>>>> aab23e6b405d0f461d6de51b434d48ad8f368ee4
             auth
               .inMemoryAuthentication()
               .passwordEncoder(bCryptPasswordEncoder())

@@ -20,10 +20,9 @@ public class BeansConfig {
     @Bean
     public Items items() {
         Path filePath = Paths.get(file);
-
+        Items items = new Items();
         //read filePath
         return new Items();
     }
-
 
 }
