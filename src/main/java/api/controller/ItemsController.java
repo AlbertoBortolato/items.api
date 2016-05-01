@@ -32,15 +32,18 @@ public class ItemsController {
 
     @RequestMapping(value = {"/"},           //attributo che aggiungiamo sul URL
       method = RequestMethod.POST,
-      consumes = MediaType.APPLICATION_JSON_VALUE,     //Di default lo prende (Specificato)
-      produces = MediaType.APPLICATION_JSON_VALUE)
+      consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},     //Di default lo prende (Specificato)
+      produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     //Di default lo prende (Specificato). Su qualsiasi metodo che restituisce qualcosa
     @ResponseBody
-    List<Items.Item> postRequest(@RequestBody List<Items.Item> items) { //@RequestBody:  corpo della richiesta
+    public ResponseEntity<List<Items.Item>> postRequest(@RequestBody List<Items.Item> items) { //@RequestBody:  corpo della richiesta
 
-        // this.service.addSingle(item);
-        this.service.addAll(items);
-        return items;
+        if (items != null) {              // this.service.addSingle(item);
+            service.addAll(items);
+            return new ResponseEntity<List<Items.Item>>(items, null, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<List<Items.Item>>(items, null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @RequestMapping(value = "/{id}",       //attributo che aggiungiamo sul URL
@@ -50,9 +53,12 @@ public class ItemsController {
     @ResponseBody
     public ResponseEntity<Items> deleteItem(@PathVariable("id") String id) {
 
-        this.service.deleteById(id);
-        return new ResponseEntity<Items>(service.items(), null, HttpStatus.OK);
-
+        if(id!=null) {
+            this.service.deleteById(id);
+            return new ResponseEntity<Items>(service.items(), null, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Items>(service.items(), null, HttpStatus.BAD_REQUEST);
+        }
 
     }
 
@@ -63,9 +69,14 @@ public class ItemsController {
     //Di default lo prende (Specificato). Su qualsiasi metodo che restituisce qualcosa
     @ResponseBody
     public ResponseEntity<Items> putRequest(@RequestBody Items.Item updated, @PathVariable("id") String id) { //@RequestBody:  corpo della richiesta
-        Items.Item toUpdate = new Items.Item();
-        toUpdate.setId(id);
-        this.service.updateObject(updated, toUpdate);
-        return new ResponseEntity<Items>(service.items(), null, HttpStatus.OK);
+        if(id!=null) {
+            Items.Item toUpdate = new Items.Item();
+            toUpdate.setId(id);
+            this.service.updateObject(updated, toUpdate);
+            return new ResponseEntity<Items>(service.items(), null, HttpStatus.OK);
+        }else {
+            return new ResponseEntity<Items>(service.items(), null, HttpStatus.BAD_REQUEST);
+        }
+
     }
 }
