@@ -143,8 +143,7 @@ public class ItemsService {
     }
 
     public void delete(String id) {
-        Items.Item item = new Items.Item();
-        item.setId(id);
+        Items.Item item = this.getItem(id);
         this.delete(item);
     }
 
@@ -175,7 +174,6 @@ public class ItemsService {
 
     public List<Items.Item> findItems(Map<String, String> queryParams){
         List<Items.Item> retItems = this.items().getItems().stream()
-                .filter(item -> ItemsService::filterTest)
                 .filter(item -> {
                     String query = queryParams.get("description");
                     if (!StringUtils.isBlank(query) && !StringUtils.isBlank(item.getDescription())) {
