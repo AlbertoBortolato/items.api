@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -78,5 +79,24 @@ public class ItemsController {
             return new ResponseEntity<Items>(service.items(), null, HttpStatus.BAD_REQUEST);
         }
 
+    }
+    @RequestMapping(value = {"/","ricerca"},           //attributo che aggiungiamo sul URL
+                   method = RequestMethod.GET,
+                   consumes = MediaType.APPLICATION_JSON_VALUE,     //Di default lo prende (Specificato)
+                   produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Items> searchItems(@RequestParam(value = "query", required = false) String query) { //request param con una mappa generica per chiave e valore.
+        Items.Item item = new Items.Item();
+        item.setId(query);
+
+        if (service.items().getItems().contains(item)) {
+            List<Items.Item> tmpList = new LinkedList<>(service.items().getItems());
+            Items.Item result = tmpList.get(tmpList.indexOf(item));
+            return new ResponseEntity(result, null, HttpStatus.OK);
+
+        }
+        else {
+            return new ResponseEntity<Items>(service.items(), null, HttpStatus.NOT_FOUND);
+        }
     }
 }
