@@ -57,6 +57,7 @@ public class SecurityConfig {
                     .passwordEncoder(bCryptPasswordEncoder())  //password encoded
                     .withUser(userAdmin).password(bCryptPasswordEncoder().encode(userAdminPass)).roles(adminRoles.toArray(new String[]{})).and()
                     .withUser(userDefault).password(bCryptPasswordEncoder().encode(userDefaultPass)).roles(userRoles.toArray(new String[]{}));
+
             // @formatter:on
         }
     }
@@ -74,20 +75,20 @@ public class SecurityConfig {
                 http
                         .csrf()
                             .disable()
-                            .authorizeRequests()
-                        .antMatchers(HttpMethod.GET, "/api")
-                            .hasAnyRole("ADMIN", "USER")
-                        .antMatchers(HttpMethod.PUT, "/api")
-                            .hasAnyRole("ADMIN", "USER")
-                        .antMatchers(HttpMethod.POST, "/api")
-                            .hasAnyRole("ADMIN", "USER")
-                        .antMatchers(HttpMethod.DELETE, "/api")
-                            .hasAnyRole("ADMIN")
-                        .antMatchers("/**")
-                            .hasRole("ADMIN")
+                        .authorizeRequests()
+                            .antMatchers(HttpMethod.GET, "/api")
+                                .hasAnyRole("ADMIN", "USER")
+                            .antMatchers(HttpMethod.PUT, "/api")
+                                .hasAnyRole("ADMIN", "USER")
+                            .antMatchers(HttpMethod.POST, "/api")
+                                .hasAnyRole("ADMIN", "USER")
+                            .antMatchers(HttpMethod.DELETE, "/api")
+                                .hasAnyRole("ADMIN")
+                            .antMatchers("/**")
+                                .hasRole("ADMIN")
                         .and()
                             .sessionManagement()
-                            .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                         .and()
                             .formLogin()
                         .and()
@@ -99,7 +100,9 @@ public class SecurityConfig {
                 ;
                 // @formatter:on
             } else {
-                http.csrf().disable();
+                http
+                        .csrf()
+                            .disable();
             }
         }
     }

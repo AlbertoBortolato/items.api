@@ -2,10 +2,7 @@ package api.model;
 
 import org.joda.time.DateTime;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by matthew on 28.04.16.
@@ -20,6 +17,7 @@ public class Items {
     }
 
     public static class Item{
+
         String id;
         String name;
         String description;
@@ -27,9 +25,13 @@ public class Items {
         Date creationDate;
         Date modifiedDate;
 
+        Map<String, Object> values = new HashMap<>();
+
         public Item(){
-            id = UUID.randomUUID().toString();
-        }       //UUID ==> ID univoco (pesano un pò di più)
+            this.id = UUID.randomUUID().toString();
+            this.creationDate = DateTime.now().toDate();
+            this.modifiedDate = this.creationDate;
+        }
 
         public String getId() {
             return id;
@@ -77,6 +79,14 @@ public class Items {
 
         public void setModifiedDate(Date modifiedDate) {
             this.modifiedDate = modifiedDate;
+        }
+
+        public Map<String, Object> getValues() {
+            return values;
+        }
+
+        public void setValues(Map<String, Object> values) {
+            this.values = values;
         }
 
         @Override
