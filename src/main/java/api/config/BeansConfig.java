@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 
 import javax.inject.Inject;
 import java.io.FileInputStream;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.concurrent.Executors;
 
 /**
  * Created by matthew on 28.04.16.
@@ -30,6 +32,13 @@ public class BeansConfig {
 
     @Inject
     ObjectMapper mapper;
+
+    @Bean
+    public ConcurrentTaskScheduler taskScheduler(){
+        ConcurrentTaskScheduler s = new ConcurrentTaskScheduler();
+        s.setConcurrentExecutor(Executors.newFixedThreadPool(4));
+        return s;
+    }
 
     @Bean
     public Items items() {
