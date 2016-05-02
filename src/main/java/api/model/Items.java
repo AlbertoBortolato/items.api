@@ -1,7 +1,10 @@
 package api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.joda.time.DateTime;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -65,16 +68,28 @@ public class Items {
             this.content = content;
         }
 
-        public Date getCreationDate() {
+        @JsonIgnore
+        public Date getModCreationDate() {
             return creationDate;
+        }
+
+        public String getCreationDate() {
+            DateFormat df = new SimpleDateFormat("HH:mm:ss - dd/MM/yyyy");
+            return df.format(creationDate.getTime());
         }
 
         public void setCreationDate(Date creationDate) {
             this.creationDate = creationDate;
         }
 
-        public Date getModifiedDate() {
+        @JsonIgnore
+        public Date getModModifiedDate() {
             return modifiedDate;
+        }
+
+        public String getModifiedDate() {
+            DateFormat df = new SimpleDateFormat("HH:mm:ss - dd/MM/yyyy");
+            return df.format(modifiedDate.getTime());
         }
 
         public void setModifiedDate(Date modifiedDate) {

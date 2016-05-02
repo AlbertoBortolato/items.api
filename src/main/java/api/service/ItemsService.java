@@ -10,7 +10,6 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 
 import javax.annotation.PostConstruct;
@@ -28,10 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.RunnableFuture;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -63,7 +58,7 @@ public class ItemsService {
             public void run() {
                 service.save();
             }
-        }, DateTime.now().toDate(), 15000 );
+        }, DateTime.now().toDate(), 15000);
     }
 
 
@@ -71,7 +66,7 @@ public class ItemsService {
     public synchronized void save() {
         final Items toSave = this.items();
         final ItemsService service = this;
-        if(!service.fileLock) {
+        if (!service.fileLock) {
             service.fileLock = true;
             Callable<Items> save = new Callable<Items>() {
                 @Override
@@ -136,7 +131,7 @@ public class ItemsService {
             }
             this.items.getItems().remove(previous);
             this.items.getItems().add(update);
-            update.setCreationDate(previous.getCreationDate());
+            update.setCreationDate(previous.getModCreationDate());
             update.setModifiedDate(DateTime.now().toDate());
             this.save();
         }
@@ -161,9 +156,9 @@ public class ItemsService {
     public Items.Item getItem(String id) {
         if (!StringUtils.isBlank(id)) {
             Optional<Items.Item> found = this.items().getItems().stream()
-                    .filter(item -> item.getId() != null)
-                    .filter(item -> item.getId().toLowerCase().equals(id.toLowerCase()))
-                    .findFirst();
+              .filter(item -> item.getId() != null)
+              .filter(item -> item.getId().toLowerCase().equals(id.toLowerCase()))
+              .findFirst();
             if (!found.equals(Optional.empty())) {
                 return found.get();
             }
@@ -172,62 +167,78 @@ public class ItemsService {
         throw new IdNotSpecifiedException("Missing parameter 'id'");
     }
 
-    public List<Items.Item> findItems(Map<String, String> queryParams){
+    public List<Items.Item> findItems(Map<String, String> queryParams) {
         List<Items.Item> retItems = this.items().getItems().stream()
-                .filter(item -> {
-                    String query = queryParams.get("description");
-                    if (!StringUtils.isBlank(query) && !StringUtils.isBlank(item.getDescription())) {
-                        return item.getDescription().toLowerCase().contains(query.toLowerCase());
-                    }
-                    return true;
-                })
-                .filter(item -> {
-                    String query = queryParams.get("content");
-                    if (!StringUtils.isBlank(query) && !StringUtils.isBlank(item.getContent())) {
-                        return item.getContent().toLowerCase().contains(query.toLowerCase());
-                    }
-                    return true;
-                })
-                .filter(item -> {
-                    String query = queryParams.get("name");
-                    if (!StringUtils.isBlank(query) && !StringUtils.isBlank(item.getName())) {
-                        return item.getName().toLowerCase().contains(query.toLowerCase());
-                    }
-                    return true;
-                })
-                .filter(item -> {
-                    if (queryParams.containsKey("created_before")) {
-                        DateTime dt = DateTime.parse(queryParams.get("created_before"));
-                        DateTime compare = new DateTime(item.getCreationDate());
-                        return compare.isBefore(dt);
-                    }
-                    return true;
-                })
-                .filter(item -> {
-                    if (queryParams.containsKey("created_after")) {
-                        DateTime dt = DateTime.parse(queryParams.get("created_after"));
-                        DateTime compare = new DateTime(item.getCreationDate());
-                        return compare.isAfter(dt);
-                    }
-                    return true;
-                })
-                .filter(item -> {
-                    if (queryParams.containsKey("modified_before")) {
-                        DateTime dt = DateTime.parse(queryParams.get("modified_before"));
-                        DateTime compare = new DateTime(item.getModifiedDate());
-                        return compare.isBefore(dt);
-                    }
-                    return true;
-                })
-                .filter(item -> {
-                    if (queryParams.containsKey("modified_after")) {
-                        DateTime dt = DateTime.parse(queryParams.get("modified_after"));
-                        DateTime compare = new DateTime(item.getModifiedDate());
-                        return compare.isAfter(dt);
-                    }
-                    return true;
-                })
-                .collect(Collectors.toList());
+          .filter(item -> {
+              String exampleFilter = queryParams.get("map_contains_key_value");
+              if (!StringUtils.isBlank(exampleFilter)) {
+                  String[] keyValue = StringUtils.split(exampleFilter, ':');
+                  if (keyValue != null && keyValue.length > 1 && item.getValues().containsKey(keyValue[0])) {
+                      return item.getValues().get(keyValue[0]).toString().contains(keyValue[1]);
+                  }
+                  else if (keyValue != null && item.getValues().containsKey(keyValue[0])) {
+                      return true;
+                  }
+                  else {
+                      return false;
+                  }
+              }
+              return true;
+          })
+          .filter(item -> {
+              String query = queryParams.get("description");
+              if (!StringUtils.isBlank(query) && !StringUtils.isBlank(item.getDescription())) {
+                  return item.getDescription().toLowerCase().contains(query.toLowerCase());
+              }
+              return true;
+          })
+          .filter(item -> {
+              String query = queryParams.get("content");
+              if (!StringUtils.isBlank(query) && !StringUtils.isBlank(item.getContent())) {
+                  return item.getContent().toLowerCase().contains(query.toLowerCase());
+              }
+              return true;
+          })
+          .filter(item -> {
+              String query = queryParams.get("name");
+              if (!StringUtils.isBlank(query) && !StringUtils.isBlank(item.getName())) {
+                  return item.getName().toLowerCase().contains(query.toLowerCase());
+              }
+              return true;
+          })
+          .filter(item -> {
+              if (queryParams.containsKey("created_before")) {
+                  DateTime dt = DateTime.parse(queryParams.get("created_before"));
+                  DateTime compare = new DateTime(item.getModCreationDate());
+                  return compare.isBefore(dt);
+              }
+              return true;
+          })
+          .filter(item -> {
+              if (queryParams.containsKey("created_after")) {
+                  DateTime dt = DateTime.parse(queryParams.get("created_after"));
+                  DateTime compare = new DateTime(item.getModCreationDate());
+                  return compare.isAfter(dt);
+              }
+              return true;
+          })
+          .filter(item -> {
+              if (queryParams.containsKey("modified_before")) {
+                  DateTime dt = DateTime.parse(queryParams.get("modified_before"));
+                  DateTime compare = new DateTime(item.getModModifiedDate());
+                  return compare.isBefore(dt);
+              }
+              return true;
+          })
+          .filter(item -> {
+              if (queryParams.containsKey("modified_after")) {
+                  DateTime dt = DateTime.parse(queryParams.get("modified_after"));
+                  DateTime compare = new DateTime(item.getModModifiedDate());
+                  return compare.isAfter(dt);
+              }
+              return true;
+          })
+          .collect(Collectors.toList());
         return retItems;
 
 
