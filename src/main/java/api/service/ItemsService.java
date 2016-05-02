@@ -31,6 +31,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -174,6 +175,7 @@ public class ItemsService {
 
     public List<Items.Item> findItems(Map<String, String> queryParams){
         List<Items.Item> retItems = this.items().getItems().stream()
+                .filter(item -> ItemsService::filterTest)
                 .filter(item -> {
                     String query = queryParams.get("description");
                     if (!StringUtils.isBlank(query) && !StringUtils.isBlank(item.getDescription())) {
