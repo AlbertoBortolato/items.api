@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,8 +27,10 @@ public class ItemsController {
             method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<Items> getItems(@RequestParam Map<String, String> queryParamsMap) {
-
-        return new ResponseEntity<Items>(service.items(), null, HttpStatus.OK);
+        List<Items.Item> lst = service.findItems(queryParamsMap);
+        Items items = new Items();
+        items.getItems().addAll(lst);
+        return new ResponseEntity<Items>(items, null, HttpStatus.OK);
     }
 
     @RequestMapping(value = {"/", ""},
