@@ -14,6 +14,7 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.FileOutputStream;
@@ -55,6 +56,13 @@ public class ItemsService {
     @PostConstruct
     void init() {
         filePath = Paths.get(file);
+        final ItemsService service = this;
+        taskScheduler.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                service.save();
+            }
+        }, DateTime.now().toDate(), 15000 );
     }
 
     public synchronized void save() {
