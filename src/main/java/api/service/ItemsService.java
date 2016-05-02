@@ -65,6 +65,8 @@ public class ItemsService {
         }, DateTime.now().toDate(), 15000 );
     }
 
+
+    @PreDestroy
     public synchronized void save() {
         final Items toSave = this.items();
         final ItemsService service = this;
