@@ -30,6 +30,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
+import java.util.stream.Collectors;
 
 /**
  * Created by matthew on 28.04.16.
@@ -162,30 +163,30 @@ public class ItemsService {
     }
 
     public List<Items.Item> findItems(Map<String, String> queryParams){
-        this.items().getItems().stream()
+        List<Items.Item> retItems = this.items().getItems().stream()
                 .filter(item -> {
                     String query = queryParams.get("description");
-                    if(!StringUtils.isBlank(query) && !StringUtils.isBlank(item.getDescription())) {
+                    if (!StringUtils.isBlank(query) && !StringUtils.isBlank(item.getDescription())) {
                         return item.getDescription().toLowerCase().contains(query.toLowerCase());
                     }
                     return true;
                 })
                 .filter(item -> {
                     String query = queryParams.get("content");
-                    if(!StringUtils.isBlank(query) && !StringUtils.isBlank(item.getContent())) {
+                    if (!StringUtils.isBlank(query) && !StringUtils.isBlank(item.getContent())) {
                         return item.getContent().toLowerCase().contains(query.toLowerCase());
                     }
                     return true;
                 })
                 .filter(item -> {
                     String query = queryParams.get("name");
-                    if(!StringUtils.isBlank(query) && !StringUtils.isBlank(item.getName())) {
+                    if (!StringUtils.isBlank(query) && !StringUtils.isBlank(item.getName())) {
                         return item.getName().toLowerCase().contains(query.toLowerCase());
                     }
                     return true;
                 })
                 .filter(item -> {
-                    if(queryParams.containsKey("created_before")){
+                    if (queryParams.containsKey("created_before")) {
                         DateTime dt = DateTime.parse(queryParams.get("created_before"));
                         DateTime compare = new DateTime(item.getCreationDate());
                         return compare.isBefore(dt);
@@ -193,7 +194,7 @@ public class ItemsService {
                     return true;
                 })
                 .filter(item -> {
-                    if(queryParams.containsKey("created_after")){
+                    if (queryParams.containsKey("created_after")) {
                         DateTime dt = DateTime.parse(queryParams.get("created_after"));
                         DateTime compare = new DateTime(item.getCreationDate());
                         return compare.isAfter(dt);
@@ -201,7 +202,7 @@ public class ItemsService {
                     return true;
                 })
                 .filter(item -> {
-                    if(queryParams.containsKey("modified_before")){
+                    if (queryParams.containsKey("modified_before")) {
                         DateTime dt = DateTime.parse(queryParams.get("modified_before"));
                         DateTime compare = new DateTime(item.getModifiedDate());
                         return compare.isBefore(dt);
@@ -209,13 +210,15 @@ public class ItemsService {
                     return true;
                 })
                 .filter(item -> {
-                    if(queryParams.containsKey("modified_after")){
+                    if (queryParams.containsKey("modified_after")) {
                         DateTime dt = DateTime.parse(queryParams.get("modified_after"));
                         DateTime compare = new DateTime(item.getModifiedDate());
                         return compare.isAfter(dt);
                     }
                     return true;
                 })
+                .collect(Collectors.toList());
+        return retItems;
 
 
     }
