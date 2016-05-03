@@ -20,6 +20,7 @@ import javax.inject.Inject;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -71,7 +72,7 @@ public class ItemsServiceIT {
     }
 
     @Test
-    public void add() throws Exception {
+    public void testAdd() throws Exception {
         Items.Item item = new Items.Item();
         item.setId("add-test");
         item.setName(String.format("item-%s", item.getId()));
@@ -87,13 +88,29 @@ public class ItemsServiceIT {
     }
 
     @Test
-    public void update() throws Exception {
-
+    public void testUpdate() throws Exception {
+        Items.Item preitem = new Items.Item();
+        Items.Item postitem = new Items.Item();
+        preitem.setName("pre");
+        postitem.setName("post");
+        service.add(preitem);
+        service.update(preitem,postitem);
+        assertThat(items.getItems().contains(postitem)).isTrue();
+        Optional<Items.Item> found = items.getItems().stream()
+          .filter(item -> item.getName()==preitem.getName())
+          .findFirst();
+        assertThat(found.equals(Optional.empty())).isTrue();
     }
 
     @Test
-    public void delete() throws Exception {
-
+    public void testDelete() throws Exception {
+        Items.Item item = new Items.Item();
+        String name = RandomStringUtils.random(1500, true, true);
+        item.setName(name);
+        service.add(item);
+        assertThat(items.getItems().contains(item)).isTrue();
+        service.delete(item);
+        assertThat(items.getItems().contains(item)).isFalse();
     }
 
     @Test
