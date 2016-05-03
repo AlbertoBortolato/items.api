@@ -17,10 +17,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 
+import java.awt.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Optional;
+import java.util.*;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -136,7 +138,14 @@ public class ItemsServiceIT {
 
     @Test
     public void testFindItems() throws Exception {
-
+        List<Items.Item> retItems = new ArrayList<>();
+        String name = RandomStringUtils.random(150, true, true);
+        Items.Item item1 = new Items.Item();
+        item1.setName(name);
+        Map<String,String> map = new HashMap<>();
+        map.put("name",name);
+        service.add(item1);
+        assertThat(service.findItems(map)).isNotEmpty();
     }
 
 }
