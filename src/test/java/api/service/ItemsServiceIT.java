@@ -119,7 +119,9 @@ public class ItemsServiceIT {
 
     @Test
     public void testItems() throws Exception {
-        assertThat(items.getItems().size()>9000).isTrue();
+        assertThat(service.items).isEqualTo(items);
+        Items anotheritems = new Items();
+        assertThat(service.items).isNotEqualTo(anotheritems);
     }
 
     @Test
