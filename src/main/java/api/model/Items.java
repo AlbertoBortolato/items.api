@@ -9,14 +9,16 @@ import java.util.*;
  */
 public class Items {
     Set<Item> items = new HashSet<>();
+
     public Set<Item> getItems() {
         return items;
     }
+
     public void setItems(Set<Item> items) {
         this.items = items;
     }
 
-    public static class Item{
+    public static class Item {
 
         String id;
         String name;
@@ -27,7 +29,7 @@ public class Items {
 
         Map<String, Object> values = new HashMap<>();
 
-        public Item(){
+        public Item() {
             this.id = UUID.randomUUID().toString();
             this.creationDate = DateTime.now().toDate();
             this.modifiedDate = this.creationDate;
@@ -108,9 +110,9 @@ public class Items {
         @Override
         public String toString() {
             return "Item{" +
-                    "name='" + name + '\'' +
-                    ", id='" + id + '\'' +
-                    '}';
+              "name='" + name + '\'' +
+              ", id='" + id + '\'' +
+              '}';
         }
     }
 }

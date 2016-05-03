@@ -59,6 +59,15 @@ public class ItemTest {
 
     @Test
     public void testToString() throws Exception {
+        logger.info(item.toString());
+        logger.info(item_test.toString());
+        boolean notSameToString = (item_test.toString().equals(item.toString()));
+        assertThat(notSameToString).isFalse();
+        logger.info("not same to string: " + notSameToString);
+        item_test.setId(item.getId());
+        item_test.setName(item.getName());
+        boolean sameToString = (item_test.toString().equals(item.toString()));
+        logger.info("same to string: " + sameToString);
 
     }
 
