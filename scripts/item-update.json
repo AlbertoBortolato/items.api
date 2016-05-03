@@ -1,0 +1,6 @@
+{
+	"id" : "1",
+	"name": "updated item",
+	"description" : "an updated item",
+	"content": "could still be base64"
+}

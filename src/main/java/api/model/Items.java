@@ -2,26 +2,24 @@ package api.model;
 
 import org.joda.time.DateTime;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by matthew on 28.04.16.
  */
 public class Items {
     Set<Item> items = new HashSet<>();  //Set è tipo List ma non permette di inserire doppioni (non inserisce in automatico)
+
     public Set<Item> getItems() {
         return items;
     }
+
     public void setItems(Set<Item> items) {
         this.items = items;
     }
 
 
-    public static class Item{
-
+    public static class Item {
         String id;
         String name;
         String description;
@@ -29,9 +27,14 @@ public class Items {
         Date creationDate;
         Date modifiedDate;
 
-        public Item(){
-            id = UUID.randomUUID().toString();
+        Map<String, Object> values = new HashMap<>();
+
+        public Item() {
+            this.id = UUID.randomUUID().toString();
+            this.creationDate = DateTime.now().toDate();
+            this.modifiedDate = this.creationDate;
         }
+
 
         public String getId() {
             return id;
@@ -81,6 +84,14 @@ public class Items {
             this.modifiedDate = modifiedDate;
         }
 
+        public Map<String, Object> getValues() {
+            return values;
+        }
+
+        public void setValues(Map<String, Object> values) {
+            this.values = values;
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -100,9 +111,9 @@ public class Items {
         @Override
         public String toString() {
             return "Item{" +
-                    "name='" + name + '\'' +
-                    ", id='" + id + '\'' +
-                    '}';
+              "name='" + name + '\'' +
+              ", id='" + id + '\'' +
+              '}';
         }
     }
 }
