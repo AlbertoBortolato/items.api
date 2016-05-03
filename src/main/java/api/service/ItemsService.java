@@ -67,7 +67,7 @@ public class ItemsService {
             public void run() {
                 service.save();
             }
-        }, DateTime.now().toDate(), 15000 );
+        }, DateTime.now().toDate(), 15000);
     }
 
 
@@ -75,7 +75,7 @@ public class ItemsService {
     public synchronized void save() {
         final Items toSave = this.items();
         final ItemsService service = this;
-        if(!service.fileLock) {
+        if (!service.fileLock) {
             service.fileLock = true;
             Callable<Items> save = new Callable<Items>() {
                 @Override
@@ -201,9 +201,9 @@ public class ItemsService {
     public Items.Item getItem(String id) {
         if (!StringUtils.isBlank(id)) {
             Optional<Items.Item> found = this.items().getItems().stream()
-                    .filter(item -> item.getId() != null)
-                    .filter(item -> item.getId().toLowerCase().equals(id.toLowerCase()))
-                    .findFirst();
+              .filter(item -> item.getId() != null)
+              .filter(item -> item.getId().toLowerCase().equals(id.toLowerCase()))
+              .findFirst();
             if (!found.equals(Optional.empty())) {
                 return found.get();
             }
@@ -212,62 +212,87 @@ public class ItemsService {
         throw new IdNotSpecifiedException("Missing parameter 'id'");
     }
 
-    public List<Items.Item> findItems(Map<String, String> queryParams){
-        List<Items.Item> retItems = this.items().getItems().stream()
-                .filter(item -> {
-                    String query = queryParams.get("description");
-                    if (!StringUtils.isBlank(query) && !StringUtils.isBlank(item.getDescription())) {
-                        return item.getDescription().toLowerCase().contains(query.toLowerCase());
-                    }
-                    return true;
-                })
-                .filter(item -> {
-                    String query = queryParams.get("content");
-                    if (!StringUtils.isBlank(query) && !StringUtils.isBlank(item.getContent())) {
-                        return item.getContent().toLowerCase().contains(query.toLowerCase());
-                    }
-                    return true;
-                })
-                .filter(item -> {
-                    String query = queryParams.get("name");
-                    if (!StringUtils.isBlank(query) && !StringUtils.isBlank(item.getName())) {
-                        return item.getName().toLowerCase().contains(query.toLowerCase());
-                    }
-                    return true;
-                })
-                .filter(item -> {
-                    if (queryParams.containsKey("created_before")) {
-                        DateTime dt = DateTime.parse(queryParams.get("created_before"));
-                        DateTime compare = new DateTime(item.getCreationDate());
-                        return compare.isBefore(dt);
-                    }
-                    return true;
-                })
-                .filter(item -> {
-                    if (queryParams.containsKey("created_after")) {
-                        DateTime dt = DateTime.parse(queryParams.get("created_after"));
-                        DateTime compare = new DateTime(item.getCreationDate());
-                        return compare.isAfter(dt);
-                    }
-                    return true;
-                })
-                .filter(item -> {
-                    if (queryParams.containsKey("modified_before")) {
-                        DateTime dt = DateTime.parse(queryParams.get("modified_before"));
-                        DateTime compare = new DateTime(item.getModifiedDate());
-                        return compare.isBefore(dt);
-                    }
-                    return true;
-                })
-                .filter(item -> {
-                    if (queryParams.containsKey("modified_after")) {
-                        DateTime dt = DateTime.parse(queryParams.get("modified_after"));
-                        DateTime compare = new DateTime(item.getModifiedDate());
-                        return compare.isAfter(dt);
-                    }
-                    return true;
-                })
-                .collect(Collectors.toList());
+
+
+
+
+
+    public List<Items.Item> findItems(Map<String, String> queryParams) {    /**sul browser   ->.../?query=....     */
+        List<Items.Item> retItems = this.items().getItems().stream()    /** in questo caso filtra gli oggetti con values con la chiave chiesta **/
+          .filter(item -> {
+              String query = queryParams.get("query");
+              Map<String, Object> ricerca = item.getValues();
+              if (!StringUtils.isBlank(query)) {
+                  return ricerca.containsKey(query);
+              }
+              return true;
+          })
+          .filter(item -> {                                             //.../?query=test:valore
+              String query = queryParams.get("q");                  //filtra il valore dell attributo test
+              if (!StringUtils.isBlank(query)) {
+                  String[] keyValue = StringUtils.split(query, ":");
+                  if (keyValue != null && keyValue.length > 1 && item.getValues().containsKey(keyValue[0])) {
+                      return item.getValues().get(keyValue[0]).toString().contains(keyValue[1]);
+
+                  }
+                  return false;
+              }
+              return true;
+          })
+          .filter(item -> {
+              String query = queryParams.get("description");
+              if (!StringUtils.isBlank(query) && !StringUtils.isBlank(item.getDescription())) {
+                  return item.getDescription().toLowerCase().contains(query.toLowerCase());
+              }
+              return true;
+          })
+          .filter(item -> {
+              String query = queryParams.get("content");
+              if (!StringUtils.isBlank(query) && !StringUtils.isBlank(item.getContent())) {
+                  return item.getContent().toLowerCase().contains(query.toLowerCase());
+              }
+              return true;
+          })
+          .filter(item -> {
+              String query = queryParams.get("name");
+              if (!StringUtils.isBlank(query) && !StringUtils.isBlank(item.getName())) {
+                  return item.getName().toLowerCase().contains(query.toLowerCase());
+              }
+              return true;
+          })
+          .filter(item -> {
+              if (queryParams.containsKey("created_before")) {
+                  DateTime dt = DateTime.parse(queryParams.get("created_before"));
+                  DateTime compare = new DateTime(item.getCreationDate());
+                  return compare.isBefore(dt);
+              }
+              return true;
+          })
+          .filter(item -> {
+              if (queryParams.containsKey("created_after")) {
+                  DateTime dt = DateTime.parse(queryParams.get("created_after"));
+                  DateTime compare = new DateTime(item.getCreationDate());
+                  return compare.isAfter(dt);
+              }
+              return true;
+          })
+          .filter(item -> {
+              if (queryParams.containsKey("modified_before")) {
+                  DateTime dt = DateTime.parse(queryParams.get("modified_before"));
+                  DateTime compare = new DateTime(item.getModifiedDate());
+                  return compare.isBefore(dt);
+              }
+              return true;
+          })
+          .filter(item -> {
+              if (queryParams.containsKey("modified_after")) {
+                  DateTime dt = DateTime.parse(queryParams.get("modified_after"));
+                  DateTime compare = new DateTime(item.getModifiedDate());
+                  return compare.isAfter(dt);
+              }
+              return true;
+          })
+          .collect(Collectors.toList());
         return retItems;
 
 
