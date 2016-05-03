@@ -81,9 +81,9 @@ public class ItemsServiceIT {
         for(int j = 0; j < 5; j++){
             item.getValues().put(RandomStringUtils.random(4), RandomStringUtils.random(25, true, true));
         }
-        assertThat(items.getItems().contains(item)).isFalse();
+        assertThat(item).isNotIn(items.getItems());
         service.add(item);
-        assertThat(items.getItems().contains(item)).isTrue();
+        assertThat(item).isIn(items.getItems());
     }
 
     @Test
