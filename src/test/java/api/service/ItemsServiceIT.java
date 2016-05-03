@@ -20,6 +20,7 @@ import javax.inject.Inject;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -49,7 +50,7 @@ public class ItemsServiceIT {
 
     @Before
     public void setUp() throws Exception {
-        for(int i = 1; i <= 10000; i++){
+        for(int i = 1; i <= 10; i++){
             Items.Item item = new Items.Item();
             item.setId(Integer.toString(i));
             item.setName(String.format("item-%s", i));
@@ -74,7 +75,7 @@ public class ItemsServiceIT {
     public void add() throws Exception {
         Items.Item item = new Items.Item();
         item.setId("add-test");
-        item.setName(String.format("item-%s", item.getId()));
+        item.setName(String.format("item-toadd", item.getId()));
         item.setContent(RandomStringUtils.random(25, true, true));
         item.setDescription(RandomStringUtils.random(150, true, true));
         item.getValues().put("test", "test-todo-" + RandomStringUtils.random(15, true, true));
@@ -88,27 +89,65 @@ public class ItemsServiceIT {
 
     @Test
     public void update() throws Exception {
-
+        Items.Item item = new Items.Item();
+        Items.Item item1 = new Items.Item();
+        item.setId("toupdate");
+        item.setName("pippo");
+        item.setName(String.format("item-toupdated", item.getId()));
+        item.setContent(RandomStringUtils.random(25, true, true));
+        item.setDescription(RandomStringUtils.random(150, true, true));
+        item.getValues().put("test", "test-todo-" + RandomStringUtils.random(15, true, true));
+        item1.setName("item-updated");
+        service.add(item);
+        service.update(item, item1);
+        boolean b = service.getItem(item1.getId()).getName().contains("updated");
+        assertThat(b).isTrue();
+        assertThat(item1).isIn(items.getItems());
     }
 
     @Test
     public void delete() throws Exception {
+        Items.Item item = new Items.Item();
+        Items.Item item1 = new Items.Item();
+        item.setId("delete-test");
+        item.setName(String.format("item-todelete", item.getId()));
+        item.setContent(RandomStringUtils.random(25, true, true));
+        item.setDescription(RandomStringUtils.random(150, true, true));
+        item.getValues().put("test", "test-todo-" + RandomStringUtils.random(15, true, true));
+        service.add(item);
+        service.delete(item);
+        assertThat(item).isNotIn(items.getItems());
 
     }
 
     @Test
     public void items() throws Exception {
+        service.items().equals(this.items);
 
     }
 
     @Test
     public void getItem() throws Exception {
+        String id = "get-test";
+        Items.Item item = new Items.Item();
+        item.setId("get-test");
+        item.setName(String.format("item-toget", item.getId()));
+        item.setContent(RandomStringUtils.random(25, true, true));
+        item.setDescription(RandomStringUtils.random(150, true, true));
+        item.getValues().put("test", "test-todo-" + RandomStringUtils.random(15, true, true));
+        service.add(item);
+        Items.Item out = service.getItem(id);
+        assertThat(out.getId().equals(id));
 
     }
 
     @Test
     public void findItems() throws Exception {
-
+        List<Items.Item> lst = new ArrayList<Items.Item>();
+        Map<String, String> mapOut = new HashMap<>();
+        mapOut.put("tet","test-todo");
+        lst = service.findItems(mapOut);
+        assertThat(lst).isNotNull();
     }
 
 }
