@@ -100,6 +100,8 @@ public class ItemsServiceIT {
           .filter(item -> item.getName()==preitem.getName())
           .findFirst();
         assertThat(found.equals(Optional.empty())).isTrue();
+        assertThat(service.getItem(preitem.getId()).getModifiedDate()!=preitem.getModifiedDate()).isTrue();
+        assertThat(service.getItem(preitem.getId()).getName().contains(postitem.getName())).isTrue();
     }
 
     @Test
@@ -114,17 +116,26 @@ public class ItemsServiceIT {
     }
 
     @Test
-    public void items() throws Exception {
-
+    public void testItems() throws Exception {
+        assertThat(items.getItems().size()>9000).isTrue();
     }
 
     @Test
-    public void getItem() throws Exception {
-
+    public void testGetItem() throws Exception {
+        String name = RandomStringUtils.random(1500, true, true);
+        String newname = RandomStringUtils.random(1500, true, true);
+        Items.Item item1= new Items.Item();
+        item1.setName(name);
+        service.add(item1);
+        service.getItem(item1.getId()).setName(newname);
+        Optional<Items.Item> found = items.getItems().stream()
+          .filter(item -> item.getName()==newname)
+          .findFirst();
+        assertThat(!found.equals(Optional.empty())).isTrue();
     }
 
     @Test
-    public void findItems() throws Exception {
+    public void testFindItems() throws Exception {
 
     }
 
