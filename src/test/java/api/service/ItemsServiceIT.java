@@ -82,7 +82,7 @@ public class ItemsServiceIT {
         item.setDescription(RandomStringUtils.random(150, true, true));
         item.getValues().put("test", "test-todo-" + RandomStringUtils.random(15, true, true));
         for(int j = 0; j < 5; j++){
-            item.getValues().put(RandomStringUtils.random(4), RandomStringUtils.random(25, true, true));
+            item.getValues().put(RandomStringUtils.random(4), RandomStringUtils.random(250, true, true));
         }
         assertThat(item).isNotIn(items.getItems());
         service.add(item);
@@ -138,7 +138,6 @@ public class ItemsServiceIT {
 
     @Test
     public void testFindItems() throws Exception {
-        List<Items.Item> retItems = new ArrayList<>();
         String name = RandomStringUtils.random(150, true, true);
         Items.Item item1 = new Items.Item();
         item1.setName(name);
@@ -146,6 +145,9 @@ public class ItemsServiceIT {
         map.put("name",name);
         service.add(item1);
         assertThat(service.findItems(map)).isNotEmpty();
+        String impossible = RandomStringUtils.random(1500, true, true);
+        map.replace("name",impossible);
+        assertThat(service.findItems(map)).isEmpty();
     }
 
 }
